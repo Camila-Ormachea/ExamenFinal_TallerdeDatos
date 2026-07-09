@@ -9,7 +9,6 @@
 
 library(rio)
 library(tidyverse)
-install.packages("janitor")
 library(janitor)
 library(readr)
 library(dplyr)
@@ -17,3 +16,7 @@ library(tidyr)
 library(ggplot2)
 library(stringr)
 renv::snapshot()
+
+#2. Importar datos
+mod100 <- import("datos/crudos/Enaho01-2025-100.csv", encoding = "Latin-1")
+mod200 <- import ("datos/crudos/Enaho01-2025-200.csv", encoding = "Latin-1")
