@@ -17,6 +17,26 @@ library(ggplot2)
 library(stringr)
 renv::snapshot()
 
-#2. Importar datos
+#2. Importar datos-------------------------------------------------------------
 mod100 <- import("datos/crudos/Enaho01-2025-100.csv", encoding = "Latin-1")
 mod200 <- import ("datos/crudos/Enaho01-2025-200.csv", encoding = "Latin-1")
+
+#3. Unión de bases-------------------------------------------------------------
+
+# Variables que identifican de manera única a cada hogar en la ENAHO.
+# Se utilizarán como llaves para unir los módulos a nivel hogar.
+
+keys_hogar <- c(
+  "AÑO",
+  "MES",
+  "CONGLOME",
+  "UBIGEO",
+  "VIVIENDA",
+  "HOGAR",
+  "DOMINIO",
+  "ESTRATO",
+  "SUB_CONGLOME"
+)
+
+enaho_2025 <- mod200 |>
+  left_join(mod100, by = keys_hogar)
