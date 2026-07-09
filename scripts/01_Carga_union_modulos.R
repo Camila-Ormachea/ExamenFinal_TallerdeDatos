@@ -40,3 +40,9 @@ keys_hogar <- c(
 
 enaho_2025 <- mod200 |>
   left_join(mod100, by = keys_hogar)
+
+#4. Exportamos base de datos creada--------------------------------------------
+
+install.packages("arrow")
+library(arrow)
+renv::snapshot()
