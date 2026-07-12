@@ -104,3 +104,56 @@ colSums(is.na(enaho_seleccion))
 dim(enaho_seleccion)        # ¿Cuántas filas y columnas tenemos tras los joins previos?
 names(enaho_seleccion)      # Verificamos si los nombres son legibles
 glimpse(enaho_seleccion)    # Revisión crítica de cómo R interpretó los tipos de datos
+
+# ------------------------------------------------------------------------------
+# 4. DIAGNÓSTICO DE DATOS PERDIDOS
+# ------------------------------------------------------------------------------
+
+# 4.1 Gráfico de NAs
+grafico_nas <- gg_miss_var(enaho_seleccion, show_pct = TRUE) +
+  labs(
+    title = "Porcentaje de datos perdidos por variable",
+    subtitle = "ENAHO 2025",
+    x = "Variables",
+    y = "% de datos perdidos"
+  ) +
+  theme_minimal()
+
+print(grafico_nas)
+
+#Exportamos el gráfico
+ggsave(
+  "outputs/graficode_datos_perdidos.png",
+  plot = grafico_nas,
+  width = 8,
+  height = 6,
+  bg = "white"
+)
+
+# 4.2 Reporte tabular de NAs
+
+reporte_nas <- enaho_seleccion %>%
+  summarise(across(everything(),
+                   ~ round(sum(is.na(.))/n()*100, 2))) %>%
+  pivot_longer(
+    everything(),
+    names_to = "variable",
+    values_to = "porcentaje_na"
+  ) %>%
+  arrange(desc(porcentaje_na))
+
+reporte_nas
+
+#Exportamos el reporte
+write_csv(
+  reporte_nas,
+  "outputs/reporte_datos_perdidos.csv"
+)
+
+# 4.3 Breve interpretación
+#Se identifican valores perdidos en las variables estado civil, 
+# tipo de vivienda y material predominante de la vivienda.
+#
+#Aquello valores perdidos de la variable estado_civil corresponden a menores de 12 años, 
+# por lo que pueden considerarse ausencias estructurales derivadas del diseño 
+# del cuestionario de la ENAHO.
