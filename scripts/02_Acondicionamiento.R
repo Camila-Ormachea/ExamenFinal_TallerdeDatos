@@ -82,3 +82,14 @@ enaho_seleccion <- enaho_seleccion %>%
   )
 
 glimpse(enaho_seleccion)
+
+#Filtración de registros sin información individual
+#Se identificó que 4473 registros correspondían a observaciones sin información 
+# individual (P203 = 0), las cuales no representan personas entrevistadas. 
+# Dado que la unidad de análisis del estudio son las personas, dichos registros son excluidos 
+# de la base analítica antes de realizar el análisis descriptivo.
+
+enaho_seleccion <- enaho_seleccion %>%
+  filter(parentesco != 0)
+
+colSums(is.na(enaho_seleccion))
