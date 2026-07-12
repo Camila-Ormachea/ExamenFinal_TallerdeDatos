@@ -66,3 +66,19 @@ enaho_seleccion <- enaho_raw %>%
     alta_dependencia_economica = NBI5
     
   )
+
+# ------------------------------------------------------------------------------
+# 2. TIPADO---------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+
+#Los factores de expansión fueron importados como texto debido al uso de coma
+# como separador decimal en los archivos originales. Se convierten a formato
+# numérico para su correcto uso.
+
+enaho_seleccion <- enaho_seleccion %>%
+  mutate(
+    factorpob07 = as.numeric(str_replace_all(factorpob07, ",", ".")),
+    factor07 = as.numeric(str_replace_all(factor07, ",", "."))
+  )
+
+glimpse(enaho_seleccion)
