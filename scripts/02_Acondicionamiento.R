@@ -157,3 +157,9 @@ write_csv(
 #Aquello valores perdidos de la variable estado_civil corresponden a menores de 12 años, 
 # por lo que pueden considerarse ausencias estructurales derivadas del diseño 
 # del cuestionario de la ENAHO.
+
+# ------------------------------------------------------------------------------
+# 5. EXPORTACIÓN DE LA BASE DE DATOS 
+# ------------------------------------------------------------------------------
+
+write_parquet(enaho_seleccion, "datos/procesados/enaho_2025_acondicionada.parquet")
