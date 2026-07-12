@@ -194,3 +194,19 @@ enaho_explorar <- enaho_acondicionada %>%
 
 #Guardar la base de datos con las etiquetas creadas 
 write_parquet(enaho_explorar, "datos/procesados/enaho_exploracion.parquet")
+
+# ------------------------------------------------------------------------------
+# 3. DISEÑO MUESTRAL (PERSONAS)
+# ------------------------------------------------------------------------------
+
+# Se define el diseño muestral utilizando el factor de expansión de personas.
+# Este diseño se empleará para estimar estadísticos descriptivos representativos
+# de la población.
+
+diseno_personas <- enaho_explorar %>%
+  as_survey_design(
+    ids = conglome,
+    strata = estrato,
+    weights = factorpob07,
+    nest = TRUE
+  )
