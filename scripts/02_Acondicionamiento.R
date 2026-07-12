@@ -93,3 +93,14 @@ enaho_seleccion <- enaho_seleccion %>%
   filter(parentesco != 0)
 
 colSums(is.na(enaho_seleccion))
+
+
+# ------------------------------------------------------------------------------
+# 3. INSPECCIÓN GENERAL DE LA BASE
+# ------------------------------------------------------------------------------
+
+#Se verifica el tamaño de la base, los nombres de las variables y el tipo de
+# dato asignado por R.
+dim(enaho_seleccion)        # ¿Cuántas filas y columnas tenemos tras los joins previos?
+names(enaho_seleccion)      # Verificamos si los nombres son legibles
+glimpse(enaho_seleccion)    # Revisión crítica de cómo R interpretó los tipos de datos
