@@ -210,3 +210,23 @@ diseno_personas <- enaho_explorar %>%
     weights = factorpob07,
     nest = TRUE
   )
+
+# ------------------------------------------------------------------------------
+# 4. CREACIÓN DE LA BASE DE HOGARES
+# ------------------------------------------------------------------------------
+
+# Las variables de característicsa de vivienda y NBI corresponden al hogar.
+# Como cada hogar aparece repetido por cada integrante, se conserva un único
+# registro por hogar para evitar duplicaciones.
+
+hogares <- enaho_explorar %>%
+  distinct(
+    año,
+    mes,
+    conglome,
+    subconglome,
+    vivienda,
+    hogar,
+    .keep_all = TRUE
+  )
+
