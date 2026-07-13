@@ -700,3 +700,83 @@ iwalk(graficos_vivienda, function(plot, nombre) {
 })
 
 ggsave(file.path(ruta_salida, "Grafico11_NBI.png"), plot = plot_nbi, width = 8, height = 5, bg = "white")
+
+# ------------------------------------------------------------------------------
+# 8. EXPLORACIÓN BIVARIADA: RELACIONES ENTRE VARIABLES--------------------------
+# ------------------------------------------------------------------------------
+
+# ------------------------------------------------------
+# 8.1 Categórica vs. Categórica: Sexo según estado civil
+# ------------------------------------------------------
+
+tabla_sexo_estado_civil <- diseno_personas %>%
+  filter(!is.na(estado_civil_etiqueta)) %>%
+  group_by(sexo_etiqueta, estado_civil_etiqueta) %>%
+  summarise(poblacion = survey_total(vartype = NULL)) %>%
+  group_by(sexo_etiqueta) %>%
+  mutate(porcentaje = scales::percent(poblacion / sum(poblacion), accuracy = 0.1))
+
+tabla_sexo_estado_civil
+
+plot_sexo_estado_civil <- ggplot(enaho_explorar %>% filter(!is.na(estado_civil_etiqueta)),
+                                 aes(x = sexo_etiqueta, fill = estado_civil_etiqueta, weight = factorpob07)) +
+  geom_bar(position = "fill") +
+  scale_y_continuous(labels = scales::percent) +
+  labs(title = "Gráfico 12. Distribución del estado civil según sexo",
+       x = "Sexo", y = "Proporción", fill = "Estado civil",
+       caption = "Fuente: ENAHO 2025. Cálculos ajustados a nivel poblacional.") +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+print(plot_sexo_estado_civil)
+
+# -----------------------------------------------------------------
+# 8.2 Categórica vs. Continua: Edad según condición de hacinamiento
+# -----------------------------------------------------------------
+
+# Aquí se mezcla nivel persona (edad) con nivel hogar (hacinamiento), 
+# interesante para ver si hay un patrón etario
+
+plot_edad_hacinamiento <- ggplot(enaho_explorar %>% filter(!is.na(hacinamiento_etiqueta) & !is.na(edad)),
+                                 aes(x = hacinamiento_etiqueta, y = edad, fill = hacinamiento_etiqueta, weight = factorpob07)) +
+  geom_boxplot(alpha = 0.7, outlier.alpha = 0.3) +
+  labs(title = "Gráfico 13. Distribución de la edad según condición de hacinamiento del hogar",
+       x = NULL, y = "Edad (años)",
+       caption = "Fuente: ENAHO 2025. Cálculos ajustados a nivel poblacional.") +
+  theme_minimal() +
+  theme(legend.position = "none")
+print(plot_edad_hacinamiento)
+
+# -----------------------------------------------------------------------------------
+# 8.3 Categórica vs. Categórica: Material de la pared según vivienda inadecuada (NBI1)
+# -----------------------------------------------------------------------------------
+
+#Aquí hay dos variables de vivienda directamente relacionadas conceptualmente 
+# (el material es uno de los criterios que define NBI1).
+
+plot_material_nbi1 <- ggplot(hogares %>% filter(!is.na(material_pared_etiqueta) & !is.na(vivienda_inadecuada_etiqueta)),
+                             aes(x = material_pared_etiqueta, fill = vivienda_inadecuada_etiqueta, weight = factor07)) +
+  geom_bar(position = "fill") +
+  scale_y_continuous(labels = scales::percent) +
+  labs(title = "Gráfico 14. Condición de vivienda inadecuada según material de las paredes",
+       x = "Material de las paredes", y = "Proporción", fill = "Condición",
+       caption = "Fuente: ENAHO 2025. Cálculos ajustados a nivel de hogar.") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "bottom")
+print(plot_material_nbi1)
+
+# ------------------------------------------------------------------------------
+# 8. EXPORTACIÓN DE GRÁFICOS Y TABLAS BIVARIADAS---------------------------------
+# ------------------------------------------------------------------------------
+
+ruta_salida_bivariada <- here("outputs", "outputs_exploracion_bivariada")
+
+if (!dir.exists(ruta_salida_bivariada)) {
+  dir.create(ruta_salida_bivariada, recursive = TRUE)
+}
+
+ggsave(file.path(ruta_salida_bivariada, "Grafico12_Sexo_EstadoCivil.png"), plot = plot_sexo_estado_civil, width = 8, height = 5, bg = "white")
+ggsave(file.path(ruta_salida_bivariada, "Grafico13_Edad_Hacinamiento.png"), plot = plot_edad_hacinamiento, width = 8, height = 5, bg = "white")
+ggsave(file.path(ruta_salida_bivariada, "Grafico14_Material_NBI1.png"), plot = plot_material_nbi1, width = 8, height = 5, bg = "white")
+
+ft_sexo_estado_civil <- formato_tabla(tabla_sexo_estado_civil %>% select(-poblacion), "Tabla 16. Estado civil según sexo")
+save_as_image(ft_sexo_estado_civil, path = file.path(ruta_salida_bivariada, "Tabla16_Sexo_EstadoCivil.png"))
