@@ -94,3 +94,12 @@ metadata(enaho_codebook)$creator <- "Camila Ormachea"
 
 # Guardamos nuestra base de datos con toda esta metadata e info adicional
 write_parquet(enaho_codebook, here("datos", "procesados", "enaho_2025_codebook.parquet"))
+
+# ==============================================================================
+# 4. GENERACIÓN AUTOMATIZADA DE DOCUMENTACIÓN
+# ==============================================================================
+
+# El paquete 'codebook' genera un reporte completo e interactivo, incluyendo
+# frecuencias, tipos de variable, etiquetas y estadísticos básicos.
+
+codebook(enaho_codebook)
