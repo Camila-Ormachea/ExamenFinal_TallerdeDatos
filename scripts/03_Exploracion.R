@@ -316,11 +316,12 @@ tabla_parentesco
 # Distribución de los hogares según tipo de vivienda
 # --------------------------------------------------
 
-tabla_tipo_vivienda <- hogares %>%
+tabla_tipo_vivienda <- diseno_hogares %>%
   filter(!is.na(tipo_vivienda_etiqueta)) %>%
-  count(tipo_vivienda_etiqueta) %>%
-  mutate(
-    porcentaje = percent(n / sum(n))
+  group_by(tipo_vivienda_etiqueta) %>%
+  summarise(
+    hogares = survey_total(),
+    porcentaje = survey_mean(vartype = NULL)
   )
 
 tabla_tipo_vivienda
@@ -329,11 +330,12 @@ tabla_tipo_vivienda
 # Distribución de los hogares según material predominante de las paredes
 # ----------------------------------------------------------------------
 
-tabla_material_pared <- hogares %>%
+tabla_material_pared <- diseno_hogares %>%
   filter(!is.na(material_pared_etiqueta)) %>%
-  count(material_pared_etiqueta) %>%
-  mutate(
-    porcentaje = percent(n / sum(n))
+  group_by(material_pared_etiqueta) %>%
+  summarise(
+    hogares = survey_total(),
+    porcentaje = survey_mean(vartype = NULL)
   )
 
 tabla_material_pared
@@ -342,22 +344,26 @@ tabla_material_pared
 # Distribución de los hogares según disponibilidad de electricidad
 # ----------------------------------------------------------------
 
-tabla_electricidad <- hogares %>%
-  count(electricidad_etiqueta) %>%
-  mutate(
-    porcentaje = percent(n / sum(n))
+tabla_electricidad <- diseno_hogares %>%
+  filter(!is.na(electricidad_etiqueta)) %>%
+  group_by(electricidad_etiqueta) %>%
+  summarise(
+    hogares = survey_total(),
+    porcentaje = survey_mean(vartype = NULL)
   )
 
-tabla_electricidad 
+tabla_electricidad
 
 # -----------------------------------------------------------------
 # Distribución de los hogares según forma de abastecimiento de agua
 # -----------------------------------------------------------------
 
-tabla_abastecimiento_agua <- hogares %>%
-  count(abastecimiento_agua_etiqueta) %>%
-  mutate(
-    porcentaje = percent(n / sum(n))
+tabla_abastecimiento_agua <- diseno_hogares %>%
+  filter(!is.na(abastecimiento_agua_etiqueta)) %>%
+  group_by(abastecimiento_agua_etiqueta) %>%
+  summarise(
+    hogares = survey_total(),
+    porcentaje = survey_mean(vartype = NULL)
   )
 
 tabla_abastecimiento_agua
@@ -366,10 +372,12 @@ tabla_abastecimiento_agua
 # Distribución de los hogares según conexión de servicio higiénico
 # ----------------------------------------------------------------
 
-tabla_servicio_higienico <- hogares %>%
-  count(servicio_higienico_etiqueta) %>%
-  mutate(
-    porcentaje = percent(n / sum(n))
+tabla_servicio_higienico <- diseno_hogares %>%
+  filter(!is.na(servicio_higienico_etiqueta)) %>%
+  group_by(servicio_higienico_etiqueta) %>%
+  summarise(
+    hogares = survey_total(),
+    porcentaje = survey_mean(vartype = NULL)
   )
 
 tabla_servicio_higienico
@@ -378,10 +386,12 @@ tabla_servicio_higienico
 # Distribución de los hogares según forma de ocupación de vivienda
 # ----------------------------------------------------------------
 
-tabla_ocupacion_vivienda <- hogares %>%
-  count(ocupacion_vivienda_etiqueta) %>%
-  mutate(
-    porcentaje = percent(n / sum(n))
+tabla_ocupacion_vivienda <- diseno_hogares %>%
+  filter(!is.na(ocupacion_vivienda_etiqueta)) %>%
+  group_by(ocupacion_vivienda_etiqueta) %>%
+  summarise(
+    hogares = survey_total(),
+    porcentaje = survey_mean(vartype = NULL)
   )
 
 tabla_ocupacion_vivienda
@@ -390,10 +400,12 @@ tabla_ocupacion_vivienda
 # Distribución de hogares según vivienda inadecuada (NBI1)
 # --------------------------------------------------------
 
-tabla_vivienda_inadecuada <- hogares %>%
-  count(vivienda_inadecuada_etiqueta) %>%
-  mutate(
-    porcentaje = percent(n / sum(n))
+tabla_vivienda_inadecuada <- diseno_hogares %>%
+  filter(!is.na(vivienda_inadecuada_etiqueta)) %>%
+  group_by(vivienda_inadecuada_etiqueta) %>%
+  summarise(
+    hogares = survey_total(),
+    porcentaje = survey_mean(vartype = NULL)
   )
 
 tabla_vivienda_inadecuada
@@ -402,10 +414,12 @@ tabla_vivienda_inadecuada
 # Distribución de hogares según condición de hacinamiento (NBI2)
 # --------------------------------------------------------------
 
-tabla_hacinamiento <- hogares %>%
-  count(hacinamiento_etiqueta) %>%
-  mutate(
-    porcentaje = percent(n / sum(n))
+tabla_hacinamiento <- diseno_hogares %>%
+  filter(!is.na(hacinamiento_etiqueta)) %>%
+  group_by(hacinamiento_etiqueta) %>%
+  summarise(
+    hogares = survey_total(),
+    porcentaje = survey_mean(vartype = NULL)
   )
 
 tabla_hacinamiento
@@ -414,10 +428,12 @@ tabla_hacinamiento
 # Distribución de hogares según disponibilidad de servicios higiénicos (NBI3)
 # ---------------------------------------------------------------------------
 
-tabla_hogar_servicios_higienicos <- hogares %>%
-  count(hogar_sin_sshh_etiqueta) %>%
-  mutate(
-    porcentaje = percent(n / sum(n))
+tabla_hogar_servicios_higienicos <- diseno_hogares %>%
+  filter(!is.na(hogar_sin_sshh_etiqueta)) %>%
+  group_by(hogar_sin_sshh_etiqueta) %>%
+  summarise(
+    hogares = survey_total(),
+    porcentaje = survey_mean(vartype = NULL)
   )
 
 tabla_hogar_servicios_higienicos
@@ -426,10 +442,12 @@ tabla_hogar_servicios_higienicos
 # Distribución de hogares con niños que no asisten a la escuela (NBI4)
 # -------------------------------------------------------------------
 
-tabla_ninos_no_escolarizados <- hogares %>%
-  count(ninos_no_escolarizados_etiqueta) %>%
-  mutate(
-    porcentaje = percent(n / sum(n))
+tabla_ninos_no_escolarizados <- diseno_hogares %>%
+  filter(!is.na(ninos_no_escolarizados_etiqueta)) %>%
+  group_by(ninos_no_escolarizados_etiqueta) %>%
+  summarise(
+    hogares = survey_total(),
+    porcentaje = survey_mean(vartype = NULL)
   )
 
 tabla_ninos_no_escolarizados
@@ -438,11 +456,95 @@ tabla_ninos_no_escolarizados
 # Distribución de hogares según alta dependencia económica (NBI5)
 # ---------------------------------------------------------------
 
-tabla_dependencia_eco <- hogares %>%
-  count(alta_dependencia_etiqueta) %>%
-  mutate(
-    porcentaje = percent(n / sum(n))
+tabla_dependencia_eco <- diseno_hogares %>%
+  filter(!is.na(alta_dependencia_etiqueta)) %>%
+  group_by(alta_dependencia_etiqueta) %>%
+  summarise(
+    hogares = survey_total(),
+    porcentaje = survey_mean(vartype = NULL)
   )
 
 tabla_dependencia_eco
+
+#---------------------------------------------
+# Exportación de los estadísticos descriptivos
+#---------------------------------------------
+
+## Aplica el formateo de porcentaje y población a todas las tablas de un jalón
+formatear_tabla <- function(tabla) {
+  tabla %>%
+    mutate(across(any_of(c("poblacion", "hogares")), scales::comma)) %>%
+    mutate(porcentaje = scales::percent(porcentaje, accuracy = 0.1))
+}
+
+tabla_sexo <- formatear_tabla(tabla_sexo)
+tabla_estado_civil <- formatear_tabla(tabla_estado_civil)
+tabla_parentesco <- formatear_tabla(tabla_parentesco)
+tabla_tipo_vivienda <- formatear_tabla(tabla_tipo_vivienda)
+tabla_material_pared <- formatear_tabla(tabla_material_pared)
+tabla_electricidad <- formatear_tabla(tabla_electricidad)
+tabla_abastecimiento_agua <- formatear_tabla(tabla_abastecimiento_agua)
+tabla_servicio_higienico <- formatear_tabla(tabla_servicio_higienico)
+tabla_ocupacion_vivienda <- formatear_tabla(tabla_ocupacion_vivienda)
+tabla_vivienda_inadecuada <- formatear_tabla(tabla_vivienda_inadecuada)
+tabla_hacinamiento <- formatear_tabla(tabla_hacinamiento)
+tabla_hogar_servicios_higienicos <- formatear_tabla(tabla_hogar_servicios_higienicos)
+tabla_ninos_no_escolarizados <- formatear_tabla(tabla_ninos_no_escolarizados)
+tabla_dependencia_eco <- formatear_tabla(tabla_dependencia_eco)
+
+#Delimitar la ruta de salida de los gráficos realizados
+ruta_salida_tablas <- here("outputs", "outputs_exploracion_inicial")
+
+if (!dir.exists(ruta_salida_tablas)) {
+  dir.create(ruta_salida_tablas, recursive = TRUE)
+}
+
+# Función simple para dar formato consistente a las tablas
+formato_tabla <- function(tabla, titulo) {
+  flextable(tabla) %>%
+    set_caption(titulo) %>%
+    theme_vanilla() %>%
+    autofit() %>%
+    bg(part = "header", bg = "#4A7C59") %>%
+    color(part = "header", color = "white") %>%
+    bold(part = "header")
+}
+
+# Demográficas
+ft_sexo <- formato_tabla(tabla_sexo, "Tabla 1. Distribución de la población según sexo")
+ft_edad <- formato_tabla(edad_promedio, "Tabla 2. Estadísticos descriptivos de la edad")
+ft_estado_civil <- formato_tabla(tabla_estado_civil, "Tabla 3. Distribución de la población según estado civil")
+ft_parentesco <- formato_tabla(tabla_parentesco, "Tabla 4. Distribución de la población según parentesco")
+
+# Vivienda
+ft_tipo_vivienda <- formato_tabla(tabla_tipo_vivienda, "Tabla 5. Distribución de hogares según tipo de vivienda")
+ft_material_pared <- formato_tabla(tabla_material_pared, "Tabla 6. Distribución de hogares según material de las paredes")
+ft_electricidad <- formato_tabla(tabla_electricidad, "Tabla 7. Distribución de hogares según electricidad")
+ft_agua <- formato_tabla(tabla_abastecimiento_agua, "Tabla 8. Distribución de hogares según abastecimiento de agua")
+ft_sshh <- formato_tabla(tabla_servicio_higienico, "Tabla 9. Distribución de hogares según servicio higiénico")
+ft_ocupacion <- formato_tabla(tabla_ocupacion_vivienda, "Tabla 10. Distribución de hogares según ocupación de vivienda")
+
+# NBI
+ft_vivienda_inadecuada <- formato_tabla(tabla_vivienda_inadecuada, "Tabla 11. Hogares según vivienda inadecuada (NBI 1)")
+ft_hacinamiento <- formato_tabla(tabla_hacinamiento, "Tabla 12. Hogares según hacinamiento (NBI 2)")
+ft_hogar_sshh <- formato_tabla(tabla_hogar_servicios_higienicos, "Tabla 13. Hogares según servicio higiénico (NBI 3)")
+ft_ninos_escolar <- formato_tabla(tabla_ninos_no_escolarizados, "Tabla 14. Hogares con niños no escolarizados (NBI 4)")
+ft_dependencia <- formato_tabla(tabla_dependencia_eco, "Tabla 15. Hogares según alta dependencia económica (NBI 5)")
+
+# Exportación masiva de las tablas
+save_as_image(ft_sexo,               path = file.path(ruta_salida_tablas, "Tabla1_Sexo.png"))
+save_as_image(ft_edad,               path = file.path(ruta_salida_tablas, "Tabla2_Edad.png"))
+save_as_image(ft_estado_civil,       path = file.path(ruta_salida_tablas, "Tabla3_EstadoCivil.png"))
+save_as_image(ft_parentesco,         path = file.path(ruta_salida_tablas, "Tabla4_Parentesco.png"))
+save_as_image(ft_tipo_vivienda,      path = file.path(ruta_salida_tablas, "Tabla5_TipoVivienda.png"))
+save_as_image(ft_material_pared,     path = file.path(ruta_salida_tablas, "Tabla6_MaterialPared.png"))
+save_as_image(ft_electricidad,       path = file.path(ruta_salida_tablas, "Tabla7_Electricidad.png"))
+save_as_image(ft_agua,               path = file.path(ruta_salida_tablas, "Tabla8_Agua.png"))
+save_as_image(ft_sshh,               path = file.path(ruta_salida_tablas, "Tabla9_ServicioHigienico.png"))
+save_as_image(ft_ocupacion,          path = file.path(ruta_salida_tablas, "Tabla10_OcupacionVivienda.png"))
+save_as_image(ft_vivienda_inadecuada,path = file.path(ruta_salida_tablas, "Tabla11_NBI1_ViviendaInadecuada.png"))
+save_as_image(ft_hacinamiento,       path = file.path(ruta_salida_tablas, "Tabla12_NBI2_Hacinamiento.png"))
+save_as_image(ft_hogar_sshh,         path = file.path(ruta_salida_tablas, "Tabla13_NBI3_ServicioHigienico.png"))
+save_as_image(ft_ninos_escolar,      path = file.path(ruta_salida_tablas, "Tabla14_NBI4_NinosEscolarizados.png"))
+save_as_image(ft_dependencia,        path = file.path(ruta_salida_tablas, "Tabla15_NBI5_DependenciaEconomica.png"))
 
