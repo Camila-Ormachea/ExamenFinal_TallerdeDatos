@@ -548,3 +548,155 @@ save_as_image(ft_hogar_sshh,         path = file.path(ruta_salida_tablas, "Tabla
 save_as_image(ft_ninos_escolar,      path = file.path(ruta_salida_tablas, "Tabla14_NBI4_NinosEscolarizados.png"))
 save_as_image(ft_dependencia,        path = file.path(ruta_salida_tablas, "Tabla15_NBI5_DependenciaEconomica.png"))
 
+
+# ------------------------------------------------------------------------------
+# 7. EXPLORACIÓN UNIVARIADA: GRÁFICOS-------------------------------------------
+# ------------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------
+# 7.1 VARIABLES DEMOGRÁFICAS (nivel persona, ponderado con factorpob07)
+# ---------------------------------------------------------------------
+
+# Histograma: Edad
+plot_edad <- ggplot(enaho_explorar %>% filter(!is.na(edad)),
+                    aes(x = edad, weight = factorpob07)) +
+  geom_histogram(fill = "#4A7C59", color = "white", binwidth = 5) +
+  scale_y_continuous(labels = scales::comma) +
+  labs(title = "Gráfico 1. Distribución de la edad de la población",
+       x = "Edad (años)", y = "Frecuencia poblacional",
+       caption = "Fuente: ENAHO 2025. Cálculos ajustados a nivel poblacional.") +
+  theme_minimal()
+print(plot_edad)
+
+# Gráfico de barras: Sexo
+plot_sexo <- ggplot(enaho_explorar %>% filter(!is.na(sexo_etiqueta)),
+                    aes(x = sexo_etiqueta, weight = factorpob07)) +
+  geom_bar(fill = "#2E5B88") +
+  scale_y_continuous(labels = scales::comma) +
+  labs(title = "Gráfico 2. Distribución de la población según sexo",
+       x = "Sexo", y = "Frecuencia poblacional",
+       caption = "Fuente: ENAHO 2025. Cálculos ajustados a nivel poblacional.") +
+  theme_minimal()
+print(plot_sexo)
+
+# Gráfico de barras: Estado civil
+plot_estado_civil <- ggplot(enaho_explorar %>% filter(!is.na(estado_civil_etiqueta)),
+                            aes(x = estado_civil_etiqueta, weight = factorpob07)) +
+  geom_bar(fill = "#E69F00") +
+  scale_y_continuous(labels = scales::comma) +
+  labs(title = "Gráfico 3. Distribución de la población según estado civil",
+       x = "Estado civil", y = "Frecuencia poblacional",
+       caption = "Fuente: ENAHO 2025. Cálculos ajustados a nivel poblacional.") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+print(plot_estado_civil)
+
+# Gráfico de barras: Parentesco
+plot_parentesco <- ggplot(enaho_explorar %>% filter(!is.na(parentesco_etiqueta)),
+                          aes(x = parentesco_etiqueta, weight = factorpob07)) +
+  geom_bar(fill = "#8B5A8C") +
+  scale_y_continuous(labels = scales::comma) +
+  labs(title = "Gráfico 4. Distribución de la población según parentesco con el jefe de hogar",
+       x = "Parentesco", y = "Frecuencia poblacional",
+       caption = "Fuente: ENAHO 2025. Cálculos ajustados a nivel poblacional.") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+print(plot_parentesco)
+
+# ---------------------------------------------------------------
+# 7.2 VARIABLES DE VIVIENDA (nivel hogar, ponderado con factor07)
+# ---------------------------------------------------------------
+
+vars_vivienda <- c(
+  "tipo_vivienda_etiqueta",
+  "material_pared_etiqueta",
+  "ocupacion_vivienda_etiqueta",
+  "abastecimiento_agua_etiqueta",
+  "servicio_higienico_etiqueta",
+  "electricidad_etiqueta"
+)
+
+titulos_vivienda <- c(
+  tipo_vivienda_etiqueta       = "Gráfico 5. Distribución de hogares según tipo de vivienda",
+  material_pared_etiqueta      = "Gráfico 6. Distribución de hogares según material de las paredes",
+  ocupacion_vivienda_etiqueta  = "Gráfico 7. Distribución de hogares según ocupación de la vivienda",
+  abastecimiento_agua_etiqueta = "Gráfico 8. Distribución de hogares según abastecimiento de agua",
+  servicio_higienico_etiqueta  = "Gráfico 9. Distribución de hogares según servicio higiénico",
+  electricidad_etiqueta        = "Gráfico 10. Distribución de hogares según acceso a electricidad"
+)
+
+graficos_vivienda <- map(vars_vivienda, function(var) {
+  ggplot(hogares %>% filter(!is.na(.data[[var]])),
+         aes(x = .data[[var]], weight = factor07)) +
+    geom_bar(fill = "#4A7C59") +
+    scale_y_continuous(labels = scales::comma) +
+    labs(title = titulos_vivienda[[var]],
+         x = NULL, y = "Frecuencia de hogares",
+         caption = "Fuente: ENAHO 2025. Cálculos ajustados a nivel de hogar.") +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+})
+names(graficos_vivienda) <- vars_vivienda
+
+print(graficos_vivienda[["tipo_vivienda_etiqueta"]])
+print(graficos_vivienda[["material_pared_etiqueta"]])
+print(graficos_vivienda[["ocupacion_vivienda_etiqueta"]])
+print(graficos_vivienda[["abastecimiento_agua_etiqueta"]])
+print(graficos_vivienda[["servicio_higienico_etiqueta"]])
+print(graficos_vivienda[["electricidad_etiqueta"]])
+
+# -----------------------------------------------------------------------------
+# 7.3 NECESIDADES BÁSICAS INSATISFECHAS (NBI) - Gráfico combinado (nivel hogar)
+# -----------------------------------------------------------------------------
+
+resumen_nbi <- diseno_hogares %>%
+  summarise(
+    vivienda_inadecuada = survey_mean(vivienda_inadecuada_etiqueta == "Vivienda inadecuada", na.rm = TRUE) * 100,
+    hacinamiento = survey_mean(hacinamiento_etiqueta == "Vivienda con hacinamiento", na.rm = TRUE) * 100,
+    sin_servicio_higienico = survey_mean(hogar_sin_sshh_etiqueta == "Vivienda sin servicios higiénicos", na.rm = TRUE) * 100,
+    ninos_no_escolarizados = survey_mean(ninos_no_escolarizados_etiqueta == "Niños que no asisten a la escuela", na.rm = TRUE) * 100,
+    alta_dependencia_economica = survey_mean(alta_dependencia_etiqueta == "Con alta dependencia económica", na.rm = TRUE) * 100
+  ) %>%
+  select(-ends_with("_se")) %>%
+  pivot_longer(everything(), names_to = "nbi", values_to = "porcentaje") %>%
+  mutate(nbi = recode(nbi,
+                      "vivienda_inadecuada" = "Vivienda inadecuada (NBI 1)",
+                      "hacinamiento" = "Hacinamiento (NBI 2)",
+                      "sin_servicio_higienico" = "Sin servicio higiénico (NBI 3)",
+                      "ninos_no_escolarizados" = "Niños no escolarizados (NBI 4)",
+                      "alta_dependencia_economica" = "Alta dependencia económica (NBI 5)"
+  ))
+
+plot_nbi <- ggplot(resumen_nbi, aes(x = reorder(nbi, porcentaje), y = porcentaje)) +
+  geom_col(fill = "#D73027") +
+  geom_text(aes(label = paste0(round(porcentaje, 1), "%")), hjust = -0.1, size = 3.5) +
+  coord_flip(clip = "off") +
+  scale_y_continuous(labels = scales::comma, expand = expansion(mult = c(0, 0.15))) +
+  labs(title = "Gráfico 11. Porcentaje de hogares con Necesidades Básicas Insatisfechas (NBI)",
+       x = NULL, y = "Porcentaje de hogares (%)",
+       caption = "Fuente: ENAHO 2025. Cálculos ajustados a nivel de hogar.") +
+  theme_minimal()
+print(plot_nbi)
+
+
+# -----------------------
+# EXPORTACIÓN DE GRÁFICOS
+# -----------------------
+
+ruta_salida <- here("outputs", "outputs_exploracion_univariada")
+
+if (!dir.exists(ruta_salida)) {
+  dir.create(ruta_salida, recursive = TRUE)
+}
+
+ggsave(file.path(ruta_salida, "Grafico1_Edad.png"), plot = plot_edad, width = 8, height = 5, bg = "white")
+ggsave(file.path(ruta_salida, "Grafico2_Sexo.png"), plot = plot_sexo, width = 8, height = 5, bg = "white")
+ggsave(file.path(ruta_salida, "Grafico3_EstadoCivil.png"), plot = plot_estado_civil, width = 8, height = 5, bg = "white")
+ggsave(file.path(ruta_salida, "Grafico4_Parentesco.png"), plot = plot_parentesco, width = 8, height = 5, bg = "white")
+
+iwalk(graficos_vivienda, function(plot, nombre) {
+  ggsave(file.path(ruta_salida, paste0("Grafico_", nombre, ".png")),
+         plot = plot, width = 8, height = 5, bg = "white")
+})
+
+ggsave(file.path(ruta_salida, "Grafico11_NBI.png"), plot = plot_nbi, width = 8, height = 5, bg = "white")
