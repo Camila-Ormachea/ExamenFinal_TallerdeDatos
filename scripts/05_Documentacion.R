@@ -67,6 +67,30 @@ var_label(enaho_codebook$hogar_sin_sshh_etiqueta) <- "Vivienda sin servicios hig
 var_label(enaho_codebook$ninos_no_escolarizados_etiqueta) <- "Hogares con niños que no asisten a la escuela (Fuente: NBI4)"
 var_label(enaho_codebook$alta_dependencia_etiqueta) <- "Hogares con alta dependencia económica (Fuente: NBI5)"
 
+# ==============================================================================
+# 3. DOCUMENTACIÓN DE DECISIONES METODOLÓGICAS
+# ==============================================================================
 
+# Diccionario de decisiones metodológicas
+dict_metadata <- list(
+  parentesco_etiqueta = "Se excluyeron 4473 registros con P203 = 0 por no representar observaciones individuales, dado que la unidad de análisis del estudio son las personas.",
+  estado_civil_etiqueta = "Los valores perdidos corresponden a menores de 12 años, para quienes la pregunta no aplica según el diseño del cuestionario de la ENAHO (ausencia estructural, no MCAR/MAR).",
+  vivienda_inadecuada_etiqueta = "Indicador NBI1 construido y provisto directamente por el INEI según su metodología oficial de Necesidades Básicas Insatisfechas.",
+  hacinamiento_etiqueta = "Indicador NBI2 construido y provisto directamente por el INEI según su metodología oficial de Necesidades Básicas Insatisfechas.",
+  hogar_sin_sshh_etiqueta = "Indicador NBI3 construido y provisto directamente por el INEI según su metodología oficial de Necesidades Básicas Insatisfechas.",
+  ninos_no_escolarizados_etiqueta = "Indicador NBI4 construido y provisto directamente por el INEI según su metodología oficial de Necesidades Básicas Insatisfechas.",
+  alta_dependencia_etiqueta = "Indicador NBI5 construido y provisto directamente por el INEI según su metodología oficial de Necesidades Básicas Insatisfechas."
+)
 
+# Aplicamos las descripciones iterativamente a las columnas correspondientes
+for (var in names(dict_metadata)) {
+  attr(enaho_codebook[[var]], "description") <- dict_metadata[[var]]
+}
 
+# Agregamos metadatos a nivel de ESTUDIO (Ficha Técnica)
+metadata(enaho_codebook)$name <- "Base de Datos Analítica - Demografía y Vivienda ENAHO 2025"
+metadata(enaho_codebook)$description <- "Submuestra de la Encuesta Nacional de Hogares (2025) con variables demográficas, de vivienda y de Necesidades Básicas Insatisfechas (NBI), restringida a registros con información individual (P203 != 0)."
+metadata(enaho_codebook)$creator <- "Camila Ormachea"
+
+# Guardamos nuestra base de datos con toda esta metadata e info adicional
+write_parquet(enaho_codebook, here("datos", "procesados", "enaho_2025_codebook.parquet"))
