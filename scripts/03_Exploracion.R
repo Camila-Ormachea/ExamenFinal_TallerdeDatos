@@ -235,7 +235,7 @@ hogares <- enaho_explorar %>%
 # ------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
-# 5.1 Variables demográficas----------------------------------------------------
+# 5.1 VARIABLES DEMOGRÁFICAS----------------------------------------------------
 #-------------------------------------------------------------------------------
 
 # ---------------------------------------
@@ -263,9 +263,9 @@ edad_promedio <- diseno_personas %>%
 
 edad_promedio
 
-# -----------------------------------
+# -------------------------------
 # Distribución según estado civil
-# -----------------------------------
+# -------------------------------
 
 #Se excluyen los menores de 12 años porque la pregunta no les corresponde.
 tabla_estado_civil <- diseno_personas %>%
@@ -290,3 +290,142 @@ tabla_parentesco <- diseno_personas %>%
   )
 
 tabla_parentesco
+
+#-------------------------------------------------------------------------------
+# 5.2 VARIABLES DE VIVIENDA-----------------------------------------------------
+#-------------------------------------------------------------------------------
+
+# --------------------------------------------------
+# Distribución de los hogares según tipo de vivienda
+# --------------------------------------------------
+
+tabla_tipo_vivienda <- hogares %>%
+  filter(!is.na(tipo_vivienda_etiqueta)) %>%
+  count(tipo_vivienda_etiqueta) %>%
+  mutate(
+    porcentaje = percent(n / sum(n))
+  )
+
+tabla_tipo_vivienda
+
+# ----------------------------------------------------------------------
+# Distribución de los hogares según material predominante de las paredes
+# ----------------------------------------------------------------------
+
+tabla_material_pared <- hogares %>%
+  filter(!is.na(material_pared_etiqueta)) %>%
+  count(material_pared_etiqueta) %>%
+  mutate(
+    porcentaje = percent(n / sum(n))
+  )
+
+tabla_material_pared
+
+# ----------------------------------------------------------------
+# Distribución de los hogares según disponibilidad de electricidad
+# ----------------------------------------------------------------
+
+tabla_electricidad <- hogares %>%
+  count(electricidad_etiqueta) %>%
+  mutate(
+    porcentaje = percent(n / sum(n))
+  )
+
+tabla_electricidad 
+
+# -----------------------------------------------------------------
+# Distribución de los hogares según forma de abastecimiento de agua
+# -----------------------------------------------------------------
+
+tabla_abastecimiento_agua <- hogares %>%
+  count(abastecimiento_agua_etiqueta) %>%
+  mutate(
+    porcentaje = percent(n / sum(n))
+  )
+
+tabla_abastecimiento_agua
+
+# ----------------------------------------------------------------
+# Distribución de los hogares según conexión de servicio higiénico
+# ----------------------------------------------------------------
+
+tabla_servicio_higienico <- hogares %>%
+  count(servicio_higienico_etiqueta) %>%
+  mutate(
+    porcentaje = percent(n / sum(n))
+  )
+
+tabla_servicio_higienico
+
+# ----------------------------------------------------------------
+# Distribución de los hogares según forma de ocupación de vivienda
+# ----------------------------------------------------------------
+
+tabla_ocupacion_vivienda <- hogares %>%
+  count(ocupacion_vivienda_etiqueta) %>%
+  mutate(
+    porcentaje = percent(n / sum(n))
+  )
+
+tabla_ocupacion_vivienda
+
+# --------------------------------------------------------
+# Distribución de hogares según vivienda inadecuada (NBI1)
+# --------------------------------------------------------
+
+tabla_vivienda_inadecuada <- hogares %>%
+  count(vivienda_inadecuada_etiqueta) %>%
+  mutate(
+    porcentaje = percent(n / sum(n))
+  )
+
+tabla_vivienda_inadecuada
+
+# --------------------------------------------------------------
+# Distribución de hogares según condición de hacinamiento (NBI2)
+# --------------------------------------------------------------
+
+tabla_hacinamiento <- hogares %>%
+  count(hacinamiento_etiqueta) %>%
+  mutate(
+    porcentaje = percent(n / sum(n))
+  )
+
+tabla_hacinamiento
+
+# ---------------------------------------------------------------------------
+# Distribución de hogares según disponibilidad de servicios higiénicos (NBI3)
+# ---------------------------------------------------------------------------
+
+tabla_hogar_servicios_higienicos <- hogares %>%
+  count(hogar_sin_sshh_etiqueta) %>%
+  mutate(
+    porcentaje = percent(n / sum(n))
+  )
+
+tabla_hogar_servicios_higienicos
+
+# -------------------------------------------------------------------
+# Distribución de hogares con niños que no asisten a la escuela (NBI4)
+# -------------------------------------------------------------------
+
+tabla_ninos_no_escolarizados <- hogares %>%
+  count(ninos_no_escolarizados_etiqueta) %>%
+  mutate(
+    porcentaje = percent(n / sum(n))
+  )
+
+tabla_ninos_no_escolarizados
+
+# ---------------------------------------------------------------
+# Distribución de hogares según alta dependencia económica (NBI5)
+# ---------------------------------------------------------------
+
+tabla_dependencia_eco <- hogares %>%
+  count(alta_dependencia_etiqueta) %>%
+  mutate(
+    porcentaje = percent(n / sum(n))
+  )
+
+tabla_dependencia_eco
+
