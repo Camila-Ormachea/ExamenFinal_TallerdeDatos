@@ -108,3 +108,40 @@ write_parquet(
   enaho_analitica,
   here("datos", "procesados", "enaho_2025_analitica.parquet")
 )
+
+# ==============================================================================
+# 3. REPORTE DE VARIABLES RECODIFICADAS-----------------------------------------
+# ==============================================================================
+
+reporte_clasificar <- enaho_diseno_analitico %>%
+  tbl_svysummary(
+    include = c(
+      num_nbi, clasificacion_pobreza_nbi,
+      grupo_edad_teoria, grupo_edad_datos,
+      acceso_basico, condicion_habitacional
+    ),
+    label = list(
+      num_nbi ~ "Número de NBI (0 a 5)",
+      clasificacion_pobreza_nbi ~ "Clasificación de pobreza por NBI",
+      grupo_edad_teoria ~ "Grupo etario (criterio teórico)",
+      grupo_edad_datos ~ "Tercil de edad (criterio de datos)",
+      acceso_basico ~ "Acceso a servicios básicos",
+      condicion_habitacional ~ "Condición habitacional combinada"
+    ),
+    statistic = list(
+      all_categorical() ~ "{n_unweighted} ({p}%)",
+      all_continuous() ~ "{mean} ({sd})"
+    ),
+    digits = all_continuous() ~ 2,
+    missing_text = "(Casos perdidos / NA)"
+  ) %>%
+  modify_header(label = "**Variable Construida / Recodificada**") %>%
+  modify_caption("**Reporte de Variables Analíticas - Fase CLASIFICAR (ENAHO 2025)**") %>%
+  bold_labels()
+
+reporte_clasificar
+
+# Exportar el reporte a HTML (usando flextable para mantener el formato)
+reporte_clasificar %>%
+  as_flex_table() %>%
+  flextable::save_as_html(path = here("outputs", "CLASIFICAR_Reporte_VariablesCreadas.html"))
