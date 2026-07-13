@@ -43,8 +43,8 @@ El directorio se organiza a través de la siguiente estructura de carpetas:
 │   ├── CLASIFICAR_Reporte_VariablesCreadas.html   # Reporte de variables analíticas creadas (script de Clasificar)
 │   └── CodeBook_Enaho_2025.html            # Libro de códigos final creado con el paquete `codebook` (script de Documentación)
 ├── docs/                          # Documentos técnicos de la ENAHO 2025
-│   ├── Diccionario_ENAHO_2025     # Diccionario de datos de la ENAHO 2025
-│   ├── Ficha_Tecnica_ENAHO_2025   # Ficha técnica de la ENAHO 2025
+│   ├── Diccionario_2025     # Diccionario de datos de la ENAHO 2025
+│   ├── FichaTecnica  # Ficha técnica de la ENAHO 2025
 ├── renv/                       # Carpeta aislada del entorno local de paquetes
 ├── renv.lock                   # Registro exacto de las versiones de las librerías
 └──  .gitignore                  # Configuración de exclusión para evitar la subida de datos masivos al repositorio
