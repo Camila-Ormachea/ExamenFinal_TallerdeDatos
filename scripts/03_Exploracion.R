@@ -8,7 +8,7 @@
 # =====================================================================================
 
 # ------------------------------------------------------------------------------
-# 0. CONFIGURACIÓN Y CARGA DE DATOS
+# 0. CONFIGURACIÓN Y CARGA DE DATOS---------------------------------------------
 # ------------------------------------------------------------------------------
 library(webshot2)
 library(tidyverse)
@@ -25,10 +25,10 @@ renv::snapshot()
 enaho_acondicionada <- read_parquet(here("datos", "procesados", "enaho_2025_acondicionada.parquet"))
 
 # ------------------------------------------------------------------------------
-# 2. PREPARACIÓN DE ETIQUETAS
+# 2. PREPARACIÓN DE ETIQUETAS---------------------------------------------------
 # ------------------------------------------------------------------------------
 
-#Crecaión de la nueva base para explorar
+#Creación de la nueva base para explorar
 enaho_explorar <- enaho_acondicionada %>%
   mutate(
     
@@ -157,9 +157,9 @@ enaho_explorar <- enaho_acondicionada %>%
       labels = c("No electricidad","Sí electricidad")
     ),
     
-    #=========================
+    #========================================
     # Necesidades Básicas Insatisfechas (NBI)
-    #=========================
+    #=======================================
     
     vivienda_inadecuada_etiqueta = factor(
       vivienda_inadecuada,
@@ -196,7 +196,7 @@ enaho_explorar <- enaho_acondicionada %>%
 write_parquet(enaho_explorar, "datos/procesados/enaho_exploracion.parquet")
 
 # ------------------------------------------------------------------------------
-# 3. DISEÑO MUESTRAL (PERSONAS)
+# 3. DISEÑO MUESTRAL (PERSONAS)-------------------------------------------------
 # ------------------------------------------------------------------------------
 
 # Se define el diseño muestral utilizando el factor de expansión de personas.
@@ -212,7 +212,7 @@ diseno_personas <- enaho_explorar %>%
   )
 
 # ------------------------------------------------------------------------------
-# 4. CREACIÓN DE LA BASE DE HOGARES
+# 4. CREACIÓN DE LA BASE DE HOGARES---------------------------------------------
 # ------------------------------------------------------------------------------
 
 # Las variables de característicsa de vivienda y NBI corresponden al hogar.
@@ -230,3 +230,63 @@ hogares <- enaho_explorar %>%
     .keep_all = TRUE
   )
 
+# ------------------------------------------------------------------------------
+# 5. ESTADÍSTICOS DESCRIPTIVOS--------------------------------------------------
+# ------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
+# 5.1 Variables demográficas----------------------------------------------------
+#-------------------------------------------------------------------------------
+
+# ---------------------------------------
+# Distribución de la población según sexo
+# ---------------------------------------
+
+tabla_sexo <- diseno_personas %>%
+  group_by(sexo_etiqueta) %>%
+  summarise(
+    poblacion = survey_total(),
+    porcentaje = survey_mean(vartype = NULL)
+  )
+
+tabla_sexo
+
+# ------------------------------------
+# Estadísticos descriptivos de la edad
+# ------------------------------------
+
+edad_promedio <- diseno_personas %>%
+  summarise(
+    edad_promedio = survey_mean(edad),
+    edad_mediana = survey_median(edad)
+  )
+
+edad_promedio
+
+# -----------------------------------
+# Distribución según estado civil
+# -----------------------------------
+
+#Se excluyen los menores de 12 años porque la pregunta no les corresponde.
+tabla_estado_civil <- diseno_personas %>%
+  filter(!is.na(estado_civil_etiqueta)) %>%
+  group_by(estado_civil_etiqueta) %>%
+  summarise(
+    poblacion = survey_total(),
+    porcentaje = survey_mean(vartype = NULL)
+  )
+
+tabla_estado_civil
+
+# ---------------------------------------------------
+# Distribución según parentesco con el jefe del hogar
+# ---------------------------------------------------
+
+tabla_parentesco <- diseno_personas %>%
+  group_by(parentesco_etiqueta) %>%
+  summarise(
+    poblacion = survey_total(),
+    porcentaje = survey_mean(vartype = NULL)
+  )
+
+tabla_parentesco
